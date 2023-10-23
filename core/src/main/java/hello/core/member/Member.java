@@ -1,10 +1,11 @@
 package hello.core.member;
 
 public class Member {
-    private Long id;
-    private String name;
-    private Grade grade;
+    private Long id;        // 고유 ID
+    private String name;    // 회원 이름
+    private Grade grade;    // 회원 등급
 
+    // 생성자
     public Member(Long id, String name, Grade grade) {
         this.id = id;
         this.name = name;
