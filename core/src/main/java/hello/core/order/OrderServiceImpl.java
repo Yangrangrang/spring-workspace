@@ -11,7 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-@RequiredArgsConstructor    // final 붙은 파라미터의 생성자를 만들어준다. 확인 command + F12
+//@RequiredArgsConstructor    // final 붙은 파라미터의 생성자를 만들어준다. 확인 command + F12
 public class OrderServiceImpl implements OrderService{
 
     // final은 무조건 값이 할당되어야함.
@@ -42,10 +42,10 @@ public class OrderServiceImpl implements OrderService{
 //    }
 
 //    @Autowired  // 생성자가 딱 하나만 있다면 autowired를 적지 않아도 자동등록 해준다. (생성자 주입은
-//    public OrderServiceImpl(MemberRepository memberRepository, DiscountPolicy discountPolicy) {
-//        this.memberRepository = memberRepository;
-//        this.discountPolicy = discountPolicy;
-//    }
+    public OrderServiceImpl(MemberRepository memberRepository, DiscountPolicy discountPolicy) {
+        this.memberRepository = memberRepository;
+        this.discountPolicy = discountPolicy;
+    }
 
 //    @Autowired // 일반 메서드 주입 (일반적으로 잘 사용하지 않음)
 //    public void init(MemberRepository memberRepository, DiscountPolicy discountPolicy) {
