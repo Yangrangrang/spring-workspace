@@ -19,6 +19,7 @@ public class OrderServiceImpl implements OrderService{
 //    private final DiscountPolicy discountPolicy = new RateDiscountPolicy();
 
 //    orderServiceImple 은 discountPolicy만 의존 하도록 (추상화에 의존)
+    // 생성자 주입을 쓰면 장점이 final키워드를 쓸수 있다. (생성자를 통해서만 값을 넣을 수 있음)
     private final MemberRepository memberRepository;
     private final DiscountPolicy discountPolicy;
 
