@@ -6,7 +6,7 @@ public class ReviewCalculrator {
 
     private static final List<ReviewNewArithmeticOperator> list = List.of(new ReviewAdditionOperator(), new ReviewSubtractionOperator(), new ReviewMultiplicationOperator(), new ReviewDIvisionOperator());
 
-    public static int calculate(int num1, String oper, int num2) {
+    public static int calculate(ReviewPositiveNumber num1, String oper, ReviewPositiveNumber num2) {
 
 //        if(oper.equals("+")){
 //            return num1 + num2;

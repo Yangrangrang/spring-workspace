@@ -6,5 +6,5 @@ public interface ReviewNewArithmeticOperator {
     public boolean supports(String oper);
 
     // 연산할 숫자
-    public int calculate(int num1, int num2);
+    public int calculate(ReviewPositiveNumber num1, ReviewPositiveNumber num2);
 }
