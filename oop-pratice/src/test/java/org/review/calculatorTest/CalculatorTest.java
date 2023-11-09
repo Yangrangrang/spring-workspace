@@ -1,6 +1,7 @@
 package org.review.calculatorTest;
 
 import org.assertj.core.api.Assertions;
+import org.example.calculator.Calculator;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -11,6 +12,7 @@ import org.review.calculator.ReviewCalculrator;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 
 /**
@@ -45,6 +47,13 @@ public class CalculatorTest {
                 arguments(8, "*", 2, 16),
                 arguments(8, "/", 2, 4)
         );
+    }
 
+    @DisplayName("나눗셈 예외")
+    @Test
+    void 나눗셈예외() {
+        assertThatCode(() -> ReviewCalculrator.calculate(10 , "/", 0))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("0으로는 나눌 수 없습니다.");
     }
 }
