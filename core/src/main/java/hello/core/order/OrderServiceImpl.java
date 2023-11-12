@@ -41,10 +41,10 @@ public class OrderServiceImpl implements OrderService{
 //        this.discountPolicy = discountPolicy;
 //    }
 
-//    @Autowired  // 생성자가 딱 하나만 있다면 autowired를 적지 않아도 자동등록 해준다. (생성자 주입은
-    public OrderServiceImpl(MemberRepository memberRepository, DiscountPolicy discountPolicy) {
+    @Autowired  // 생성자가 딱 하나만 있다면 autowired를 적지 않아도 자동등록 해준다. (생성자 주입은
+    public OrderServiceImpl(MemberRepository memberRepository, DiscountPolicy rateDiscountPolicy) {
         this.memberRepository = memberRepository;
-        this.discountPolicy = discountPolicy;
+        this.discountPolicy = rateDiscountPolicy;
     }
 
 //    @Autowired // 일반 메서드 주입 (일반적으로 잘 사용하지 않음)
