@@ -25,27 +25,10 @@ public class ReviewGradeCalculatorTest {
         List<ReviewCourse> courses = List.of(new ReviewCourse("수학", 3, "A+"), new ReviewCourse("영어", 3, "A+"));
 
         // 신청한 과목들 학점을 계산하고 평균을 냄
-//        ReviewGradeCalculator reviewGradeCalculator = new ReviewGradeCalculator(courses);
+        ReviewGradeCalculator reviewGradeCalculator = new ReviewGradeCalculator(courses);
 
         // 신청한 과목들 학점 계산 후 평균
-        int total = 0;
-        for (ReviewCourse cours : courses) {
-            total += cours.getCredit();
-        }
-
-        System.out.println("total = " + total);
-        assertThat(total).isSameAs(6);
-
-        double totalGrade = 0;
-        for (ReviewCourse course : courses) {
-            totalGrade += course.reviewMultiplyCreditAndCourseGrade();
-        }
-
-        System.out.println("totalGrade = " + totalGrade);
-        assertThat(totalGrade).isEqualTo(27.0);
-
-        // 결과
-        double result = totalGrade / total;
-        assertThat(result).isEqualTo(4.5);
+        double resultGrade = reviewGradeCalculator.ReviewCalculateGrade();
+        assertThat(resultGrade).isEqualTo(4.5);
     }
 }
