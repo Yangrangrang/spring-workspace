@@ -12,7 +12,8 @@ public class ReviewCourses {
     // 학점 총 합계
     public double ReviewMultiplyCreditAndCourseGrade() {
         return courses.stream()
-                .mapToDouble(ReviewCourse::reviewMultiplyCreditAndCourseGrade)
+//                .mapToDouble(ReviewCourse::reviewMultiplyCreditAndCourseGrade)
+                .mapToDouble(course-> course.reviewMultiplyCreditAndCourseGrade())
                 .sum();
     }
 
