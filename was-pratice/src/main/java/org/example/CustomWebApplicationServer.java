@@ -34,10 +34,12 @@ public class CustomWebApplicationServer {
                     BufferedReader br = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8));
                     DataOutputStream dos = new DataOutputStream(out);
 
-                    String line;
-                    while ((line = br.readLine()) != "") {
-                        System.out.println(line);
-                    }
+//                    String line;
+//                    while ((line = br.readLine()) != "") {
+//                        System.out.println(line);
+//                    }
+
+                    if ()
                 }
             }
         }
