@@ -53,12 +53,12 @@ public class RequestLine {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         RequestLine that = (RequestLine) o;
-        return Objects.equals(urlPath, that.urlPath) && Objects.equals(method, that.method) && Objects.equals(queryString, that.queryString);
+        return Objects.equals(urlPath, that.urlPath) && Objects.equals(method, that.method) && Objects.equals(queryStrings, that.queryStrings);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(urlPath, method, queryString);
+        return Objects.hash(urlPath, method, queryStrings);
     }
 
 
