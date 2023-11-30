@@ -16,12 +16,12 @@ public class RequestLine {
 
     private final String urlPath;   // GET
     private final String method;    // /calculate
-    private String queryString;    // operand1=11&opertor=*&operand2=33
+    private QueryStrings queryStrings;    // operand1=11&opertor=*&operand2=33
 
     public RequestLine(String method, String urlPath, String queryString) {
         this.method = method;
         this.urlPath = urlPath;
-        this.queryString = queryString;
+        this.queryStrings = new QueryStrings(queryString);
     }
 
     public RequestLine(String requestLine) {
@@ -31,10 +31,20 @@ public class RequestLine {
         this.urlPath = urlPathTokens[0];
 
         if (urlPathTokens.length == 2) {
-            this.queryString = urlPathTokens[1];
+            this.queryStrings = new QueryStrings(urlPathTokens[1]);
         }
+    }
 
+    public boolean isGetRequest() {
+        return "GET".equals(this.method);
+    }
 
+    public boolean matchPath(String requestPath) {
+        return urlPath.equals(requestPath);
+    }
+
+    public QueryStrings getQueryStrings() {
+        return this.queryStrings;
     }
 
     // 객체를 비교 하려면 필요하다
@@ -50,4 +60,7 @@ public class RequestLine {
     public int hashCode() {
         return Objects.hash(urlPath, method, queryString);
     }
+
+
+
 }
