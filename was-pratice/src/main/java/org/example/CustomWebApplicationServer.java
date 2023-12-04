@@ -9,9 +9,12 @@ import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class CustomWebApplicationServer {
     private final int port;
+    private final ExecutorService executorService = Executors.newFixedThreadPool(10);
     private static final Logger logger = LoggerFactory.getLogger(CustomWebApplicationServer.class);
 
     public CustomWebApplicationServer(int port) {
@@ -69,9 +72,15 @@ public class CustomWebApplicationServer {
                  *          CPU와 메모리 사용량이 증가
                  *          최악의 경우 서버의 리소스가 감당하지 못해서 서버가 다운되는 가능성도 있다.
                  *
-                 * 해결 : 스레드를 이미 고정된 개수만큼 생성해두고 이를 재활용하는 스레드 풀 개념 적용
+                 * 해결 : 스레드를 이미 고정된 개수만큼 생성해두고 이를 재활용하는 스레드 풀 개념 적용 (step3)
                  */
-                new Thread(new ClientRequestHandler(clientSocket)).start();
+//                new Thread(new ClientRequestHandler(clientSocket)).start();
+
+                /**
+                 * step3
+                 * Thread Pool을 적용해 안정적인 서비스가 가능하도록 한다.
+                 */
+                executorService.execute(new ClientRequestHandler(clientSocket));
             }
         }
     }
