@@ -1,15 +1,19 @@
 package hello.core.order;
 
+import hello.core.annotation.MainDiscountPolicy;
 import hello.core.discount.DiscountPolicy;
 import hello.core.discount.FixDiscountPolicy;
 import hello.core.discount.RateDiscountPolicy;
 import hello.core.member.Member;
 import hello.core.member.MemberRepository;
 import hello.core.member.MemoryMemberRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 @Component
+//@RequiredArgsConstructor    // final 붙은 파라미터의 생성자를 만들어준다. 확인 command + F12
 public class OrderServiceImpl implements OrderService{
 
     // final은 무조건 값이 할당되어야함.
@@ -19,6 +23,7 @@ public class OrderServiceImpl implements OrderService{
 //    private final DiscountPolicy discountPolicy = new RateDiscountPolicy();
 
 //    orderServiceImple 은 discountPolicy만 의존 하도록 (추상화에 의존)
+    // 생성자 주입을 쓰면 장점이 final키워드를 쓸수 있다. (생성자를 통해서만 값을 넣을 수 있음)
     private final MemberRepository memberRepository;
     private final DiscountPolicy discountPolicy;
 
@@ -38,8 +43,9 @@ public class OrderServiceImpl implements OrderService{
 //        this.discountPolicy = discountPolicy;
 //    }
 
-//    @Autowired  // 생성자가 딱 하나만 있다면 autowired를 적지 않아도 자동등록 해준다. (생성자 주입은
-    public OrderServiceImpl(MemberRepository memberRepository, DiscountPolicy discountPolicy) {
+    @Autowired  // 생성자가 딱 하나만 있다면 autowired를 적지 않아도 자동등록 해준다. (생성자 주입은
+//    public OrderServiceImpl(MemberRepository memberRepository, @Qualifier("mainDiscountPolicy") DiscountPolicy discountPolicy) {
+    public OrderServiceImpl(MemberRepository memberRepository, @MainDiscountPolicy DiscountPolicy discountPolicy) {
         this.memberRepository = memberRepository;
         this.discountPolicy = discountPolicy;
     }

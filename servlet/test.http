@@ -1,0 +1,3 @@
+GET http://localhost:8080/calculate?operand1=20&operator=%2b&operand2=10
+
+## +는 예약어라서 안됨! 인코딩해야함 + >> %2b (퍼센트 인코딩)
