@@ -4,12 +4,13 @@ import java.sql.*;
 
 public class UserDao {
     private Connection getConnection() {
-        String url = "jdbc:h2:mem://localhost/~/jdbc-practice;MODE=MySQL;DB_CLOSE_DELAY=-1";
-        String id = "sa";
-        String pw = "";
+//        String url = "jdbc:h2:mem://localhost/~/jdbc-practice;MODE=MySQL;DB_CLOSE_DELAY=-1";
+        String url = "jdbc:mysql://localhost:3306/test";
+        String id = "root";
+        String pw = "1234";
 
         try {
-            Class.forName("org.h2.Driver");
+            Class.forName("com.mysql.cj.jdbc.Driver");
             return DriverManager.getConnection(url, id, pw);
         } catch (Exception e) {
             return null;
