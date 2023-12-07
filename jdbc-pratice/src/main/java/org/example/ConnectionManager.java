@@ -7,10 +7,10 @@ import javax.sql.DataSource;
 public class ConnectionManager {
     public static DataSource getDataSource() {
         HikariDataSource hikariDataSource = new HikariDataSource();
-        hikariDataSource.setDriverClassName("org.h2.Driver");
-        hikariDataSource.setJdbcUrl("jdbc:h2:mem://localhost/~/jdbc-practice;MODE=MySQL;DB_CLOSE_DELAY=-1");
-        hikariDataSource.setUsername("sa");
-        hikariDataSource.setPassword("");
+        hikariDataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
+        hikariDataSource.setJdbcUrl("jdbc:mysql://localhost:3306/test");
+        hikariDataSource.setUsername("root");
+        hikariDataSource.setPassword("1234");
 
         return hikariDataSource;
     }
