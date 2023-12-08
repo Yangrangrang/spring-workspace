@@ -25,5 +25,9 @@ public class WebApplicationServer {
 
         tomcat.start();
         tomcat.getServer().await();
+
+        /**
+         * /code_study/spring-workspace/mvc-practice/webapps/WEB-INF/classes
+         */
     }
 }
