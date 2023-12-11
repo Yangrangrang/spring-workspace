@@ -21,5 +21,9 @@ public class WebApplicationServer {
 
         tomcat.start();
         tomcat.getServer().await();
+
+        /**
+         * \mvc-practice2\webapps\WEB-INF\classes
+         */
     }
 }
