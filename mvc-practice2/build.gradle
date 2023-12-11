@@ -1,0 +1,35 @@
+plugins {
+    id 'java'
+}
+
+group = 'org.example'
+version = '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    // EmbeddedTomcat
+    implementation 'org.apache.tomcat.embed:tomcat-embed-core:8.5.91'
+    implementation 'org.apache.tomcat.embed:tomcat-embed-jasper:8.5.91'
+
+    // sevlet
+    implementation 'javax.servlet:javax.servlet-api:4.0.1'
+
+    // jsp
+    implementation 'javax.servlet:jstl:1.2'
+
+    // log
+    implementation 'ch.qos.logback:logback-classic:1.4.11'
+
+    // reflection
+    implementation 'org.reflections:reflections:0.9.12'
+
+    testImplementation platform('org.junit:junit-bom:5.9.1')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+}
+
+test {
+    useJUnitPlatform()
+}
