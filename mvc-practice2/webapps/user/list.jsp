@@ -7,7 +7,7 @@
 <head>
     <meta charset="UTF-8">
     <title>list</title>
-    <link rel="icon" href="data:,">
+    <link rel="icon" href="data:;base64,=">
 </head>
 <body>
 

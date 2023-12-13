@@ -6,6 +6,7 @@
 <head>
     <meta charset="UTF-8">
     <title>form</title>
+    <link rel="icon" href="data:;base64,=">
 </head>
 <body>
 <form method="post" action="/users">

@@ -2,6 +2,9 @@ package org.example.mvc;
 
 import org.example.mvc.controller.Controller;
 import org.example.mvc.controller.RequestMethod;
+import org.example.mvc.view.JspViewResolver;
+import org.example.mvc.view.View;
+import org.example.mvc.view.ViewResolver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -12,6 +15,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
 
 /**
  * 어떤 경로로 요청이 들어오더라도 dispatchServlet이 실행됩니다.
@@ -21,6 +27,8 @@ public class DispatcherServlet extends HttpServlet {
     private static final Logger log = LoggerFactory.getLogger(DispatcherServlet.class);
 
     private RequestMappingHandlerMapping rmhm;
+    
+    private List<ViewResolver> viewresolvers;
 
     @Override
     public void init() throws ServletException {
@@ -28,6 +36,9 @@ public class DispatcherServlet extends HttpServlet {
 
         rmhm = new RequestMappingHandlerMapping();
         rmhm.init();
+
+        viewresolvers = Collections.singletonList(new JspViewResolver());
+        System.out.println("viewresolvers.size() = " + viewresolvers.size());
     }
 
     @Override
@@ -50,6 +61,10 @@ public class DispatcherServlet extends HttpServlet {
 //            System.out.println("requestDispatcher = " + requestDispatcher);
 //            requestDispatcher.forward(req, resp);
 
+            for (ViewResolver viewresolver : viewresolvers) {
+                View view = viewresolver.resolveView(viewName);
+                view.render(new HashMap<>() , req, resp);
+            }
 
 
         } catch (Exception e) {
