@@ -24,6 +24,8 @@ public class DispatcherServlet extends HttpServlet {
 
     @Override
     public void init() throws ServletException {
+        log.info("init");
+
         rmhm = new RequestMappingHandlerMapping();
         rmhm.init();
     }
@@ -33,15 +35,22 @@ public class DispatcherServlet extends HttpServlet {
         log.info("[DispatchServlet] service started.");
 
         try {
-            System.out.println("req = " + req.getRequestURI());
+            System.out.println("req.getRequestURI() = " + req.getRequestURI());
+            System.out.println("req.getMethod() = " + req.getMethod());
+
             Controller handler = rmhm.findHandler(new HandlerKey(RequestMethod.valueOf(req.getMethod()) ,req.getRequestURI()));
             System.out.println("handler = " + handler);
 
+            // user/form 등록 버튼 눌러서 post 로 들어올 경우 /redirect:/users 로 forward 되어서 에러남
             String viewName = handler.handleRequest(req, resp);
             System.out.println("viewName = " + viewName);
 
-            RequestDispatcher requestDispatcher = req.getRequestDispatcher(viewName);
-            requestDispatcher.forward(req, resp);
+            // 즉, forward도 되고 redirect도 되야 함
+//            RequestDispatcher requestDispatcher = req.getRequestDispatcher(viewName);
+//            System.out.println("requestDispatcher = " + requestDispatcher);
+//            requestDispatcher.forward(req, resp);
+
+
 
         } catch (Exception e) {
             log.error("exception occurred : [{}]", e.getMessage(), e);
