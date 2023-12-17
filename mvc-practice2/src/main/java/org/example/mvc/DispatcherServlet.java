@@ -3,6 +3,7 @@ package org.example.mvc;
 import org.example.mvc.controller.Controller;
 import org.example.mvc.controller.RequestMethod;
 import org.example.mvc.view.JspViewResolver;
+import org.example.mvc.view.ModelAndView;
 import org.example.mvc.view.View;
 import org.example.mvc.view.ViewResolver;
 import org.slf4j.Logger;
@@ -30,6 +31,8 @@ public class DispatcherServlet extends HttpServlet {
     
     private List<ViewResolver> viewresolvers;
 
+    private List<HandlerAdapter> handlerAdapters;
+
     @Override
     public void init() throws ServletException {
         log.info("init");
@@ -37,6 +40,7 @@ public class DispatcherServlet extends HttpServlet {
         rmhm = new RequestMappingHandlerMapping();
         rmhm.init();
 
+        handlerAdapters = List.of(new SimpleControllerHandlerAdapter());
         viewresolvers = Collections.singletonList(new JspViewResolver());
         System.out.println("viewresolvers.size() = " + viewresolvers.size());
     }
@@ -53,8 +57,16 @@ public class DispatcherServlet extends HttpServlet {
             System.out.println("handler = " + handler);
 
             // user/form 등록 버튼 눌러서 post 로 들어올 경우 /redirect:/users 로 forward 되어서 에러남
-            String viewName = handler.handleRequest(req, resp);
-            System.out.println("viewName = " + viewName);
+//            String viewName = handler.handleRequest(req, resp);
+//            System.out.println("viewName = " + viewName);
+
+            HandlerAdapter handlerAdapter = handlerAdapters.stream()
+                    .filter(ha -> ha.supports(handler))
+                    .findFirst()
+                    .orElseThrow(() -> new ServletException("no adapter for]" + handler + "]"));
+
+            ModelAndView modelAndView = handlerAdapter.handle(req, resp, handler);
+            System.out.println("modelAndView = " + modelAndView.getViewName());
 
             // 즉, forward도 되고 redirect도 되야 함
 //            RequestDispatcher requestDispatcher = req.getRequestDispatcher(viewName);
@@ -62,8 +74,8 @@ public class DispatcherServlet extends HttpServlet {
 //            requestDispatcher.forward(req, resp);
 
             for (ViewResolver viewresolver : viewresolvers) {
-                View view = viewresolver.resolveView(viewName);
-                view.render(new HashMap<>() , req, resp);
+                View view = viewresolver.resolveView(modelAndView.getViewName());
+                view.render(modelAndView.getModel() , req, resp);
             }
 
 
