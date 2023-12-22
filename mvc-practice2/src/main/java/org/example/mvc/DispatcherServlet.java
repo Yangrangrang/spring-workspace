@@ -27,7 +27,7 @@ import java.util.List;
 public class DispatcherServlet extends HttpServlet {
     private static final Logger log = LoggerFactory.getLogger(DispatcherServlet.class);
 
-    private RequestMappingHandlerMapping rmhm;
+    private HandlerMapping hm;
     
     private List<ViewResolver> viewresolvers;
 
@@ -37,8 +37,10 @@ public class DispatcherServlet extends HttpServlet {
     public void init() throws ServletException {
         log.info("init");
 
-        rmhm = new RequestMappingHandlerMapping();
+        RequestMappingHandlerMapping rmhm = new RequestMappingHandlerMapping();
         rmhm.init();
+
+        hm = rmhm;
 
         handlerAdapters = List.of(new SimpleControllerHandlerAdapter());
         viewresolvers = Collections.singletonList(new JspViewResolver());
@@ -53,7 +55,7 @@ public class DispatcherServlet extends HttpServlet {
             System.out.println("req.getRequestURI() = " + req.getRequestURI());
             System.out.println("req.getMethod() = " + req.getMethod());
 
-            Controller handler = rmhm.findHandler(new HandlerKey(RequestMethod.valueOf(req.getMethod()) ,req.getRequestURI()));
+            Object handler = hm.findHandler(new HandlerKey(RequestMethod.valueOf(req.getMethod()) ,req.getRequestURI()));
             System.out.println("handler = " + handler);
 
             // user/form 등록 버튼 눌러서 post 로 들어올 경우 /redirect:/users 로 forward 되어서 에러남
