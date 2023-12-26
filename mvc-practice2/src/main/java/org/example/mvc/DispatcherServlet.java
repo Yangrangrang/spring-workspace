@@ -44,7 +44,7 @@ public class DispatcherServlet extends HttpServlet {
         ahm.initialize();
 
         handlerMappings = List.of(rmhm, ahm);
-        handlerAdapters = List.of(new SimpleControllerHandlerAdapter());
+        handlerAdapters = List.of(new SimpleControllerHandlerAdapter(), new AnnotationHandlerAdapter());
         viewresolvers = Collections.singletonList(new JspViewResolver());
         System.out.println("viewresolvers.size() = " + viewresolvers.size());
     }
