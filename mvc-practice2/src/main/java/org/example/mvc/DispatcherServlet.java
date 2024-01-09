@@ -27,7 +27,7 @@ import java.util.List;
 public class DispatcherServlet extends HttpServlet {
     private static final Logger log = LoggerFactory.getLogger(DispatcherServlet.class);
 
-    private HandlerMapping hm;
+    private List<HandlerMapping> handlerMappings;
     
     private List<ViewResolver> viewresolvers;
 
@@ -40,9 +40,11 @@ public class DispatcherServlet extends HttpServlet {
         RequestMappingHandlerMapping rmhm = new RequestMappingHandlerMapping();
         rmhm.init();
 
-        hm = rmhm;
+        AnnotationHandlerMapping ahm = new AnnotationHandlerMapping("org.example");
+        ahm.initialize();
 
-        handlerAdapters = List.of(new SimpleControllerHandlerAdapter());
+        handlerMappings = List.of(rmhm, ahm);
+        handlerAdapters = List.of(new SimpleControllerHandlerAdapter(), new AnnotationHandlerAdapter());
         viewresolvers = Collections.singletonList(new JspViewResolver());
         System.out.println("viewresolvers.size() = " + viewresolvers.size());
     }
@@ -50,12 +52,20 @@ public class DispatcherServlet extends HttpServlet {
     @Override
     protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         log.info("[DispatchServlet] service started.");
+        String requestURI = req.getRequestURI();
+        RequestMethod requestMethod = RequestMethod.valueOf(req.getMethod());
 
         try {
             System.out.println("req.getRequestURI() = " + req.getRequestURI());
             System.out.println("req.getMethod() = " + req.getMethod());
 
-            Object handler = hm.findHandler(new HandlerKey(RequestMethod.valueOf(req.getMethod()) ,req.getRequestURI()));
+            Object handler = handlerMappings.stream()
+                    .filter(hm -> hm.findHandler(new HandlerKey(requestMethod, requestURI)) != null)
+                    .map(hm -> hm.findHandler(new HandlerKey(requestMethod, requestURI)))
+                    .findFirst()
+                    .orElseThrow(() -> new ServletException("No handler for [" + requestMethod + "," + requestURI + "]"));
+
+//            findHandler(new HandlerKey(RequestMethod.valueOf(req.getMethod()) ,req.getRequestURI()));
             System.out.println("handler = " + handler);
 
             // user/form 등록 버튼 눌러서 post 로 들어올 경우 /redirect:/users 로 forward 되어서 에러남
