@@ -45,4 +45,6 @@ class BeanFactoryTest {
         assertThat(userController).isNotNull();
         assertThat(userController.getUserService()).isNotNull();
     }
+
+    // gitflowTest
 }
