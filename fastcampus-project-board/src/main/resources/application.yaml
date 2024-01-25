@@ -15,7 +15,8 @@ spring:
     url: jdbc:mysql://localhost:3306/board
 #    username: yhn
     username: root
-    password: root
+    password: 1234
+#    password: root
 #    password: thisisTESTpw!@#$
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
