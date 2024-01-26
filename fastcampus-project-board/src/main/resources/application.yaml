@@ -15,8 +15,8 @@ spring:
     url: jdbc:mysql://localhost:3306/board
 #    username: yhn
     username: root
-#    password: 1234
-    password: root
+    password: 1234
+#    password: root
 #    password: thisisTESTpw!@#$
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
@@ -29,9 +29,6 @@ spring:
       hibernate:
         format_sql: true
         default_batch_fetch_size: 100
-  h2:
-    console:
-      enabled: false
   sql:
     init:
       mode: always
