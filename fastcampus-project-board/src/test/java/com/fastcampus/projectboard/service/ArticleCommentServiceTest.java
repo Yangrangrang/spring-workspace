@@ -35,7 +35,7 @@ class ArticleCommentServiceTest {
     void givenArticleId_whenSearchingComments_thenReturnComments() {
         //given
         Long articleId = 1L;
-        given(articleRepository.findById(articleId)).willReturn(Optional.of(Article.of("title", "content", "#hashtag")));
+//        given(articleRepository.findById(articleId)).willReturn(Optional.of(Article.of("title", "content", "#hashtag")));
 
         //when
         List<ArticleCommentDto> articleComments = sut.searchArticleComment(articleId);
@@ -49,7 +49,7 @@ class ArticleCommentServiceTest {
     void givenArticleCommentInfo_whenSavingComment_thenSavesComment() {
         //given
         Long articleId = 1L;
-        given(articleRepository.findById(articleId)).willReturn(Optional.of(Article.of("title", "content", "#hashtag")));
+//        given(articleRepository.findById(articleId)).willReturn(Optional.of(Article.of("title", "content", "#hashtag")));
 
         //when
         List<ArticleCommentDto> articleComments = sut.searchArticleComment(articleId);
