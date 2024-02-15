@@ -61,12 +61,14 @@ class ArticleControllerTest {
     }
 
 //    @Disabled("구현 중")
-    @DisplayName("[view] [GET] 게시글 상세 페이지 - 정상 호출")
+    @DisplayName("[view] [GET] 게시글 페이지 - 정상 호출")
     @Test
-    public void givenNoting_whenRequestingArticleView_thenReturnArticleView() throws Exception {
+    public void givenNothing_whenRequestingArticleView_thenReturnsArticleView() throws Exception {
         //given
         Long articleId = 1L;
+        long totalCount = 1L;
         given(articleService.getArticle(articleId)).willReturn(createArticleWithCommentsDto());
+        given(articleService.getArticleCount()).willReturn(totalCount);
 
         //when & then
         mvc.perform(get("/articles/" + articleId))
@@ -74,8 +76,10 @@ class ArticleControllerTest {
                 .andExpect(content().contentTypeCompatibleWith(MediaType.TEXT_HTML))
                 .andExpect(view().name("articles/detail"))
                 .andExpect(model().attributeExists("article"))
-                .andExpect(model().attributeExists("articleComments"));
+                .andExpect(model().attributeExists("articleComments"))
+                .andExpect(model().attributeExists("totalCount"));
         then(articleService).should().getArticle(articleId);
+        then(articleService).should().getArticleCount();
     }
 
     @DisplayName("[view] [GET] 게시글 리스트 (게시판) 페이지 - 페이징, 정렬 기능 ")
