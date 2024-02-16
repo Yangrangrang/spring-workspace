@@ -59,4 +59,15 @@ public class ArticleController {
         map.addAttribute("totalCount", articleService.getArticleCount());
         return "articles/detail";
     }
+
+    @GetMapping("/search-hashtag")
+    public String searchHashtag(
+            @RequestParam(required = false, name = "searchValue") String searchValue,
+            @PageableDefault(size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable,
+            ModelMap map
+    ) {
+
+
+        return "articles/search-hashtag";
+    }
 }
