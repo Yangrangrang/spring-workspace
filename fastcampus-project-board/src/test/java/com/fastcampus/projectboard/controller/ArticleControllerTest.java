@@ -148,7 +148,10 @@ class ArticleControllerTest {
     @Test
     public void givenNoting_whenRequestingArticleHashtagSearchView_thenReturnArticleHashtagSearchView() throws Exception {
         //given
+        List<String> hashtags = List.of("#java", "#spring", "#boot");
         given(articleService.searchArticleViaHasgtag(eq(null), any(Pageable.class))).willReturn(Page.empty());
+        given(paginationService.getPaginationBarNumbers(anyInt(), anyInt())).willReturn(List.of(1, 2, 3, 4, 5));
+        given(articleService.getHashtags()).willReturn(hashtags);
 
         //when & then
         mvc.perform(get("/articles/search-hashtag"))
@@ -156,9 +159,12 @@ class ArticleControllerTest {
                 .andExpect(content().contentTypeCompatibleWith(MediaType.TEXT_HTML))
                 .andExpect(view().name("articles/search-hashtag"))
                 .andExpect(model().attribute("articles", Page.empty()))
-                .andExpect(model().attributeExists("hashtags"))
-                .andExpect(model().attributeExists("paginationBarNumbers"));
+                .andExpect(model().attribute("hashtags", hashtags))
+                .andExpect(model().attributeExists("paginationBarNumbers"))
+                .andExpect(model().attribute("searchType", SearchType.HASHTAG));
         then(articleService).should().searchArticleViaHasgtag(eq(null), any(Pageable.class));
+        then(articleService).should().getHashtags();
+        then(paginationService).should().getPaginationBarNumbers(anyInt(), anyInt());
     }
 
     @DisplayName("[view] [GET] 게시글 해시태그 검색 페이지 - 정상 호출, 해시태그 입력")
@@ -166,7 +172,10 @@ class ArticleControllerTest {
     public void givenHashtag_whenRequestingArticleHashtagSearchView_thenReturnArticleHashtagSearchView() throws Exception {
         //given
         String hashtag = "#java";
+        List<String> hashtags = List.of("#java", "#spring", "#boot");
         given(articleService.searchArticleViaHasgtag(eq(hashtag), any(Pageable.class))).willReturn(Page.empty());
+        given(paginationService.getPaginationBarNumbers(anyInt(), anyInt())).willReturn(List.of(1, 2, 3, 4, 5));
+        given(articleService.getHashtags()).willReturn(hashtags);
 
         //when & then
         mvc.perform(get("/articles/search-hashtag")
@@ -177,8 +186,11 @@ class ArticleControllerTest {
                 .andExpect(view().name("articles/search-hashtag"))
                 .andExpect(model().attribute("articles", Page.empty()))
                 .andExpect(model().attributeExists("hashtags"))
-                .andExpect(model().attributeExists("paginationBarNumbers"));
+                .andExpect(model().attributeExists("paginationBarNumbers"))
+                .andExpect(model().attribute("searchType", SearchType.HASHTAG));
         then(articleService).should().searchArticleViaHasgtag(eq(hashtag), any(Pageable.class));
+        then(articleService).should().getHashtags();
+        then(paginationService).should().getPaginationBarNumbers(anyInt(), anyInt());
     }
 
     private ArticleWithCommentsDto createArticleWithCommentsDto() {

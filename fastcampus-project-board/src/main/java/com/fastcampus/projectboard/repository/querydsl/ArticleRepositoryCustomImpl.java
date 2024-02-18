@@ -17,21 +17,10 @@ public class ArticleRepositoryCustomImpl extends QuerydslRepositorySupport imple
     public List<String> findAllDistinctHashtag() {
         QArticle article = QArticle.article;
 
-        /**
-         * 아래 두개의 표현으로 할수 있음
-         */
-
-//        return from(article)
-//                .distinct()
-//                .select(article.hashtag)
-//                .where(article.hashtag.isNotNull())
-//                .fetch();
-
-        JPQLQuery<String> query = from(article)
+        return from(article)
                 .distinct()
                 .select(article.hashtag)
-                .where(article.hashtag.isNotNull());
-
-        return (List<String>) query;
+                .where(article.hashtag.isNotNull())
+                .fetch();
     }
 }
