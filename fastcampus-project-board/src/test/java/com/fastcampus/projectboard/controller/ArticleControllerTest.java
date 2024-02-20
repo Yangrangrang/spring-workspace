@@ -42,13 +42,6 @@ class ArticleControllerTest {
     private final MockMvc mvc;
     private final FormDataEncoder formDataEncoder;
 
-    public ArticleControllerTest(MockMvc mvc, FormDataEncoder formDataEncoder, ArticleService articleService, PaginationService paginationService) {
-        this.mvc = mvc;
-        this.formDataEncoder = formDataEncoder;
-        this.articleService = articleService;
-        this.paginationService = paginationService;
-    }
-
     @MockBean
     private ArticleService articleService;
     @MockBean
