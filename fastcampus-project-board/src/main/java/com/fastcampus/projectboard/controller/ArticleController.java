@@ -1,6 +1,6 @@
 package com.fastcampus.projectboard.controller;
 
-import com.fastcampus.projectboard.domain.type.SearchType;
+import com.fastcampus.projectboard.domain.constant.SearchType;
 import com.fastcampus.projectboard.dto.response.ArticleResponse;
 import com.fastcampus.projectboard.dto.response.ArticleWithCommentResponse;
 import com.fastcampus.projectboard.service.ArticleService;
@@ -53,7 +53,7 @@ public class ArticleController {
 
     @GetMapping("/{articleId}")
     public String article(@PathVariable("articleId") Long articleId, ModelMap map) {
-        ArticleWithCommentResponse article = ArticleWithCommentResponse.from(articleService.getArticle(articleId));
+        ArticleWithCommentResponse article = ArticleWithCommentResponse.from(articleService.getAritcleWithComments(articleId));
         map.addAttribute("article", article);
         map.addAttribute("articleComments", article.articleCommentResponses());
         map.addAttribute("totalCount", articleService.getArticleCount());
@@ -61,7 +61,7 @@ public class ArticleController {
     }
 
     @GetMapping("/search-hashtag")
-    public String searchHashtag(
+    public String searchArticleHashtag(
             @RequestParam(required = false, name = "searchValue") String searchValue,
             @PageableDefault(size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable,
             ModelMap map
