@@ -21,7 +21,7 @@ public class ArticleCommentController {
     public String postNewArticleComment(ArticleCommentRequest articleCommentRequest) {
         // TODO: 인증 정보를 넣어줘야함.
         articleCommentService.saveArticleComment(articleCommentRequest.toDto(UserAccountDto.of(
-                "han", "1234", "email.com", "hannick", null
+                "uno", "1234", "email.com", "hannick", null
         )));
 
         return "redirect:/articles/" + articleCommentRequest.articleId();
