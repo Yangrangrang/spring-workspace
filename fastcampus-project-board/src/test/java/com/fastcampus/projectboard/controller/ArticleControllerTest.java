@@ -1,6 +1,7 @@
 package com.fastcampus.projectboard.controller;
 
 import com.fastcampus.projectboard.config.SecurityConfig;
+import com.fastcampus.projectboard.config.TestSecurityConfig;
 import com.fastcampus.projectboard.domain.constant.FormStatus;
 import com.fastcampus.projectboard.domain.constant.SearchType;
 import com.fastcampus.projectboard.dto.ArticleDto;
@@ -23,6 +24,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.TestExecutionEvent;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.LocalDateTime;
@@ -35,7 +39,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @DisplayName("View 컨르톨러 - 게시글")
-@Import({SecurityConfig.class, FormDataEncoder.class})
+@Import({TestSecurityConfig.class, FormDataEncoder.class})
 @WebMvcTest(ArticleController.class)
 class ArticleControllerTest {
 
@@ -97,7 +101,23 @@ class ArticleControllerTest {
         then(paginationService).should().getPaginationBarNumbers(anyInt(), anyInt());
     }
 
-    @DisplayName("[view] [GET] 게시글 페이지 - 정상 호출")
+    @DisplayName("[view] [GET] 게시글 페이지 - 인증이 없을 땐 로그인 페이지로 이동")
+    @Test
+    public void givenNothing_whenRequestingArticlePage_thenRedirectsToLoginPage() throws Exception {
+        //given
+        long articleId = 1L;
+
+        //when & then
+        mvc.perform(get("/articles" + articleId))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrlPattern("**/login"));
+        then(articleService).shouldHaveNoInteractions();
+        then(articleService).shouldHaveNoInteractions();
+
+    }
+
+    @WithMockUser
+    @DisplayName("[view] [GET] 게시글 페이지 - 정상 호출, 인증된 사용자")
     @Test
     public void givenNothing_whenRequestingArticleView_thenReturnsArticleView() throws Exception {
         //given
@@ -206,6 +226,7 @@ class ArticleControllerTest {
         then(paginationService).should().getPaginationBarNumbers(anyInt(), anyInt());
     }
 
+    @WithMockUser
     @DisplayName("[view] [GET] 새 게시글 작성 페이지")
     @Test
     void givenNoting_whenRequesting_thenReturnsNewArticlePage() throws Exception {
@@ -219,6 +240,9 @@ class ArticleControllerTest {
                 .andExpect(model().attribute("formStatus", FormStatus.CREATE));
     }
 
+//    @WithUserDetails(value = "nuoTest", userDetailsServiceBeanName = "userDetailsService", setupBefore = TestExecutionEvent.TEST_EXECUTION)
+    // 이렇게 작성할 수 있지만 userDetailService를 단 하나만 만들어서 등록했기때문에, bean이 유일하기 때문에 명시하지 않아도 찾는데 문제가 없음 (아래처럼 생략 가능하단 이야기 )
+    @WithUserDetails(value = "nuoTest", setupBefore = TestExecutionEvent.TEST_EXECUTION)    //TEST_EXECUTION: 테스트를 실행하기 직전해 셋업을 마쳐라
     @DisplayName("[view] [POST] 새 게시글 등록 - 정상 호출")
     @Test
     void givenNewArticleInfo_whenRequesting_thenSavesNewArticle() throws Exception {
@@ -238,7 +262,21 @@ class ArticleControllerTest {
         then(articleService).should().saveArticle(any(ArticleDto.class));
     }
 
-    @DisplayName("[view] [GET] 게시글 수정 페이지")
+    @DisplayName("[view] [GET] 게시글 수정 페이지 - 인증 없을 땐 로그인 페이지 이동")
+    @Test
+    void givenNothing_whenRequesting_thenRedirectsToLoginPage() throws Exception {
+        //given
+        long articleId = 1L;
+
+        //when & then
+        mvc.perform(get("/articles/" + articleId + "/form"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrlPattern("**/login"));
+        then(articleService).shouldHaveNoInteractions();
+    }
+
+    @WithMockUser
+    @DisplayName("[view] [GET] 게시글 수정 페이지 - 정상 호출, 인증된 사용자")
     @Test
     void givenNothing_whenRequesting_thenReturnsUpdateArticlePage() throws Exception {
         //given
@@ -256,6 +294,7 @@ class ArticleControllerTest {
         then(articleService).should().getArticle(articleId);
     }
 
+    @WithUserDetails(value = "nuoTest", setupBefore = TestExecutionEvent.TEST_EXECUTION)    //TEST_EXECUTION: 테스트를 실행하기 직전해 셋업을 마쳐라
     @DisplayName("[view] [POST] 게시글 수정 - 정상 호출")
     @Test
     void givenUpdatedArticleInfo_whenRequesting_thenUpdatesNewArticle() throws Exception {
@@ -277,12 +316,14 @@ class ArticleControllerTest {
         then(articleService).should().updateArticle(eq(articleId), any(ArticleDto.class));
     }
 
+    @WithUserDetails(value = "nuoTest", setupBefore = TestExecutionEvent.TEST_EXECUTION)    //TEST_EXECUTION: 테스트를 실행하기 직전해 셋업을 마쳐라
     @DisplayName("[view] [POST] 게시글 삭제 - 정상 호출")
     @Test
     void givenArticleIdToDelete_whenRequsting_thenDeletesArticle() throws Exception {
         //given
         long articleId = 1L;
-        willDoNothing().given(articleService).deleteArticle(articleId);
+        String userId = "unoTest";
+        willDoNothing().given(articleService).deleteArticle(articleId, userId);
 
         //when & then
         mvc.perform(
@@ -293,7 +334,7 @@ class ArticleControllerTest {
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/articles"))
                 .andExpect(redirectedUrl("/articles"));
-        then(articleService).should().deleteArticle(articleId);
+        then(articleService).should().deleteArticle(articleId,userId);
     }
 
     private ArticleDto createArticleDto() {
