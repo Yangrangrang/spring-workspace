@@ -14,7 +14,6 @@ import java.util.Set;
 @ToString(callSuper = true)
 @Table(indexes = {
         @Index(columnList = "title"),
-        @Index(columnList = "hashtag"),
         @Index(columnList = "createdAt"),
         @Index(columnList = "createdBy")
 })
@@ -76,7 +75,7 @@ public class Article extends AuditingFields{
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof Article that)) return false;
-        return id != null && id.equals(that.id);
+        return this.getId() != null && this.getId().equals(that.getId());
     }
 
     @Override

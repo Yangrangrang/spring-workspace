@@ -23,7 +23,6 @@ import static org.assertj.core.api.Assertions.*;
 @Import(JpaRepositoryTest.TestJpaConfig.class)
 @DataJpaTest
 class JpaRepositoryTest {
-
     private final ArticleRepository articleRepository;
     private final ArticleCommentRepository articleCommentRepository;
     private final UserAccountRepository userAccountRepository;
@@ -43,35 +42,31 @@ class JpaRepositoryTest {
 
     @DisplayName("select 테스트")
     @Test
-    void givenTestData_whenSelection_thenWorksFine() {
+    void givenTestData_whenSelecting_thenWorksFine() {
         // Given
-
         // When
         List<Article> articles = articleRepository.findAll();
-
         // Then
         assertThat(articles)
                 .isNotNull()
                 .hasSize(123); // classpath:resources/data.sql 참조
     }
 
-    @DisplayName("insert test")
+    @DisplayName("insert 테스트")
     @Test
     void givenTestData_whenInserting_thenWorksFine() {
         // Given
         long previousCount = articleRepository.count();
-        UserAccount userAccount = userAccountRepository.save(UserAccount.of("new-uno", "pw", null, null, null));
+        UserAccount userAccount = userAccountRepository.save(UserAccount.of("newUno", "pw", null, null, null));
         Article article = Article.of(userAccount, "new article", "new content");
         article.addHashtags(Set.of(Hashtag.of("spring")));
 
         // When
         articleRepository.save(article);
-
         // Then
         assertThat(articleRepository.count()).isEqualTo(previousCount + 1);
     }
-
-    @DisplayName("update test")
+    @DisplayName("update 테스트")
     @Test
     void givenTestData_whenUpdating_thenWorksFine() {
         // Given
@@ -90,21 +85,19 @@ class JpaRepositoryTest {
                 .containsExactly(updatedHashtag.getHashtagName());
     }
 
-    @DisplayName("delte test")
+    @DisplayName("delete 테스트")
     @Test
     void givenTestData_whenDeleting_thenWorksFine() {
         // Given
         Article article = articleRepository.findById(1L).orElseThrow();
         long previousArticleCount = articleRepository.count();
-        long previousArticleCommnentCount = articleCommentRepository.count();
+        long previousArticleCommentCount = articleCommentRepository.count();
         int deletedCommentsSize = article.getArticleComments().size();
-
         // When
         articleRepository.delete(article);
-
         // Then
         assertThat(articleRepository.count()).isEqualTo(previousArticleCount - 1);
-        assertThat(articleCommentRepository.count()).isEqualTo(previousArticleCommnentCount - deletedCommentsSize);
+        assertThat(articleCommentRepository.count()).isEqualTo(previousArticleCommentCount - deletedCommentsSize);
     }
 
     @DisplayName("[Querydsl] 전체 hashtag 리스트에서 이름만 조회하기")
@@ -142,6 +135,7 @@ class JpaRepositoryTest {
         assertThat(articlePage.getTotalPages()).isEqualTo(4);
     }
 
+
     @EnableJpaAuditing
     @TestConfiguration
     static class TestJpaConfig {
@@ -150,5 +144,4 @@ class JpaRepositoryTest {
             return () -> Optional.of("uno");
         }
     }
-
 }
