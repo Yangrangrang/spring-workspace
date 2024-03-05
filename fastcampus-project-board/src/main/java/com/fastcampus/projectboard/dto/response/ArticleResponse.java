@@ -11,7 +11,7 @@ public record ArticleResponse(
         Long id,
         String title,
         String content,
-        Set<String> hashtagDtos,
+        Set<String> hashtags,
         LocalDateTime createdAt,
         String email,
         String nickname

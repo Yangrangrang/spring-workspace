@@ -15,7 +15,7 @@ public interface ArticleRepositoryCustom {
      */
 
     @Deprecated
-    List<String> findAllDistinctHashtag();
+    List<String> findAllDistinctHashtags();
 
     Page<Article> findByHashtagNames(Collection<String> hashtagNames, Pageable pageable);
 }
