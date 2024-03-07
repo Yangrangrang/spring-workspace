@@ -80,6 +80,6 @@ public class Article extends AuditingFields{
 
     @Override
     public int hashCode() {
-        return Objects.hash(id);
+        return Objects.hash(this.getId());
     }
 }
