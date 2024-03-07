@@ -5,6 +5,7 @@ import com.fastcampus.projectboard.domain.constant.FormStatus;
 import com.fastcampus.projectboard.domain.constant.SearchType;
 import com.fastcampus.projectboard.dto.ArticleDto;
 import com.fastcampus.projectboard.dto.ArticleWithCommentsDto;
+import com.fastcampus.projectboard.dto.HashtagDto;
 import com.fastcampus.projectboard.dto.UserAccountDto;
 import com.fastcampus.projectboard.dto.request.ArticleRequest;
 import com.fastcampus.projectboard.dto.response.ArticleResponse;
@@ -60,7 +61,7 @@ class ArticleControllerTest {
 
     @DisplayName("[view] [GET] 게시글 리스트 (게시판) 페이지 - 정상 호출")
     @Test
-    void givenNoting_whenRequestingArticleView_then() throws Exception {
+    void givenNoting_whenRequestingArticleView_thenReturnsArticlesView() throws Exception {
         //given
         given(articleService.searchArticles(eq(null), eq(null), any(Pageable.class))).willReturn(Page.empty());
         given(paginationService.getPaginationBarNumbers(anyInt(), anyInt())).willReturn(List.of(0, 1, 2, 3, 4));
@@ -72,7 +73,8 @@ class ArticleControllerTest {
                 .andExpect(view().name("articles/index"))
                 .andExpect(model().attributeExists("articles"))
                 .andExpect(model().attributeExists("paginationBarNumbers"))
-                .andExpect(model().attributeExists("searchTypes"));
+                .andExpect(model().attributeExists("searchTypes"))
+                .andExpect(model().attribute("searchTypeHashtag", SearchType.HASHTAG));
         then(articleService).should().searchArticles(eq(null), eq(null), any(Pageable.class));
         then(paginationService).should().getPaginationBarNumbers(anyInt(), anyInt());
     }
@@ -118,7 +120,7 @@ class ArticleControllerTest {
     @WithMockUser
     @DisplayName("[view] [GET] 게시글 페이지 - 정상 호출, 인증된 사용자")
     @Test
-    void givenNothing_whenRequestingArticleView_thenReturnsArticleView() throws Exception {
+    void givenAuthorizedUser_whenRequestingArticleView_thenReturnsArticleView() throws Exception {
         //given
         Long articleId = 1L;
         long totalCount = 1L;
@@ -132,7 +134,8 @@ class ArticleControllerTest {
                 .andExpect(view().name("articles/detail"))
                 .andExpect(model().attributeExists("article"))
                 .andExpect(model().attributeExists("articleComments"))
-                .andExpect(model().attributeExists("totalCount"));
+                .andExpect(model().attributeExists("totalCount"))
+                .andExpect(model().attribute("searchTypeHashtag", SearchType.HASHTAG));
         then(articleService).should().getAritcleWithComments(articleId);
         then(articleService).should().getArticleCount();
     }
@@ -181,7 +184,7 @@ class ArticleControllerTest {
     void givenNoting_whenRequestingArticleHashtagSearchView_thenReturnArticleHashtagSearchView() throws Exception {
         //given
         List<String> hashtags = List.of("#java", "#spring", "#boot");
-        given(articleService.searchArticleViaHasgtag(eq(null), any(Pageable.class))).willReturn(Page.empty());
+        given(articleService.searchArticlesViaHashtag(eq(null), any(Pageable.class))).willReturn(Page.empty());
         given(paginationService.getPaginationBarNumbers(anyInt(), anyInt())).willReturn(List.of(1, 2, 3, 4, 5));
         given(articleService.getHashtags()).willReturn(hashtags);
 
@@ -194,7 +197,7 @@ class ArticleControllerTest {
                 .andExpect(model().attribute("hashtags", hashtags))
                 .andExpect(model().attributeExists("paginationBarNumbers"))
                 .andExpect(model().attribute("searchType", SearchType.HASHTAG));
-        then(articleService).should().searchArticleViaHasgtag(eq(null), any(Pageable.class));
+        then(articleService).should().searchArticlesViaHashtag(eq(null), any(Pageable.class));
         then(articleService).should().getHashtags();
         then(paginationService).should().getPaginationBarNumbers(anyInt(), anyInt());
     }
@@ -205,7 +208,7 @@ class ArticleControllerTest {
         //given
         String hashtag = "#java";
         List<String> hashtags = List.of("#java", "#spring", "#boot");
-        given(articleService.searchArticleViaHasgtag(eq(hashtag), any(Pageable.class))).willReturn(Page.empty());
+        given(articleService.searchArticlesViaHashtag(eq(hashtag), any(Pageable.class))).willReturn(Page.empty());
         given(paginationService.getPaginationBarNumbers(anyInt(), anyInt())).willReturn(List.of(1, 2, 3, 4, 5));
         given(articleService.getHashtags()).willReturn(hashtags);
 
@@ -220,7 +223,7 @@ class ArticleControllerTest {
                 .andExpect(model().attributeExists("hashtags"))
                 .andExpect(model().attributeExists("paginationBarNumbers"))
                 .andExpect(model().attribute("searchType", SearchType.HASHTAG));
-        then(articleService).should().searchArticleViaHasgtag(eq(hashtag), any(Pageable.class));
+        then(articleService).should().searchArticlesViaHashtag(eq(hashtag), any(Pageable.class));
         then(articleService).should().getHashtags();
         then(paginationService).should().getPaginationBarNumbers(anyInt(), anyInt());
     }
@@ -228,7 +231,7 @@ class ArticleControllerTest {
     @WithMockUser
     @DisplayName("[view] [GET] 새 게시글 작성 페이지")
     @Test
-    void givenNoting_whenRequesting_thenReturnsNewArticlePage() throws Exception {
+    void givenNothing_whenRequesting_thenReturnsNewArticlePage() throws Exception {
         //given
 
         //when & then
@@ -246,7 +249,7 @@ class ArticleControllerTest {
     @Test
     void givenNewArticleInfo_whenRequesting_thenSavesNewArticle() throws Exception {
         //given
-        ArticleRequest articleRequest = ArticleRequest.of("new title", "new content", "#new");
+        ArticleRequest articleRequest = ArticleRequest.of("new title", "new content");
         willDoNothing().given(articleService).saveArticle(any(ArticleDto.class));
 
         //when & then
@@ -277,7 +280,7 @@ class ArticleControllerTest {
     @WithMockUser
     @DisplayName("[view] [GET] 게시글 수정 페이지 - 정상 호출, 인증된 사용자")
     @Test
-    void givenNothing_whenRequesting_thenReturnsUpdateArticlePage() throws Exception {
+    void givenAuthorizedUser_whenRequesting_thenReturnsUpdatedArticlePage() throws Exception {
         //given
         long articleId = 1L;
         ArticleDto dto = createArticleDto();
@@ -299,7 +302,7 @@ class ArticleControllerTest {
     void givenUpdatedArticleInfo_whenRequesting_thenUpdatesNewArticle() throws Exception {
         //given
         long articleId = 1L;
-        ArticleRequest articleRequest = ArticleRequest.of("new title", "new content", "#new");
+        ArticleRequest articleRequest = ArticleRequest.of("new title", "new content");
         willDoNothing().given(articleService).updateArticle(eq(articleId), any(ArticleDto.class));
 
         //when & then
@@ -339,7 +342,7 @@ class ArticleControllerTest {
                 createUserAccountDto(),
                 "title",
                 "content",
-                "#java"
+                Set.of(HashtagDto.of("java"))
         );
     }
 
@@ -350,7 +353,7 @@ class ArticleControllerTest {
                 Set.of(),
                 "title",
                 "content",
-                "#java",
+                Set.of(HashtagDto.of("java")),
                 LocalDateTime.now(),
                 "hann",
                 LocalDateTime.now(),

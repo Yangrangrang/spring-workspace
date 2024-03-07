@@ -2,6 +2,7 @@ package com.fastcampus.projectboard.service;
 
 import com.fastcampus.projectboard.domain.Article;
 import com.fastcampus.projectboard.domain.ArticleComment;
+import com.fastcampus.projectboard.domain.Hashtag;
 import com.fastcampus.projectboard.domain.UserAccount;
 import com.fastcampus.projectboard.dto.ArticleCommentDto;
 import com.fastcampus.projectboard.dto.UserAccountDto;
@@ -18,6 +19,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.BDDMockito.*;
@@ -60,7 +62,7 @@ class ArticleCommentServiceTest {
     void givenArticleCommentInfo_whenSavingComment_thenSavesComment() {
         //given
         ArticleCommentDto dto = createArticleCommentDto("댓글");
-        given(articleRepository.getReferenceById(dto.articleId())).willReturn(createAricle());
+        given(articleRepository.getReferenceById(dto.articleId())).willReturn(createArticle());
         given(userAccountRepository.getReferenceById(dto.userAccountDto().userId())).willReturn(createUserAccount());
         given(articleCommentRepository.save(any(ArticleComment.class))).willReturn(null);
 
@@ -167,7 +169,7 @@ class ArticleCommentServiceTest {
 
     private ArticleComment createArticleComment(String content) {
         return ArticleComment.of(
-                Article.of(createUserAccount(), "title", "content", "hashtag"),
+                createArticle(),
                 createUserAccount(),
                 content
         );
@@ -183,12 +185,18 @@ class ArticleCommentServiceTest {
         );
     }
 
-    private Article createAricle() {
-        return Article.of(
+    private Article createArticle() {
+        Article article = Article.of(
                 createUserAccount(),
                 "title",
-                "content",
-                "hashtag"
+                "content"
         );
+        article.addHashtags(Set.of(createHashtag(article)));
+
+        return article;
+    }
+
+    private Hashtag createHashtag(Article article) {
+        return Hashtag.of("java");
     }
 }
