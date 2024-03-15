@@ -244,6 +244,7 @@ class ArticleServiceTest {
         ArticleDto dto = createArticleDto("새 타이틀", "새 내용 #springboot");
         Set<String> expectedHashtagNames = Set.of("springboot");
         Set<Hashtag> expectedHashtags = new HashSet<>();
+
         given(articleRepository.getReferenceById(dto.id())).willReturn(article);
         given(userAccountRepository.getReferenceById(dto.userAccountDto().userId())).willReturn(dto.userAccountDto().toEntity());
         willDoNothing().given(articleRepository).flush();
@@ -347,8 +348,8 @@ class ArticleServiceTest {
     void givenHashtag_whenCalling_thenReturnsHashtags() {
         //given
         Article article = createArticle();
-        List<String> expectedHashtags = List.of("#java", "#spring", "#boot");
-        given(articleRepository.findAllDistinctHashtags()).willReturn(expectedHashtags);
+        List<String> expectedHashtags = List.of("java", "spring", "boot");
+        given(hashtagRepository.findAllHashtagNames()).willReturn(expectedHashtags);
 
         //when
         List<String> actualHashtags = sut.getHashtags();
@@ -365,10 +366,10 @@ class ArticleServiceTest {
     private UserAccount createUserAccount(String userId) {
         return UserAccount.of(
                 userId,
-            "password",
-            "hanna@email.com",
-            "hann",
-            null
+                "password",
+                "uno@email.com",
+                "Uno",
+                null
         );
     }
 
@@ -378,9 +379,9 @@ class ArticleServiceTest {
 
     private Article createArticle(Long id) {
         Article article = Article.of(
-            createUserAccount(),
-            "title",
-            "content"
+                createUserAccount(),
+                "title",
+                "content"
         );
         article.addHashtags(Set.of(
                 createHashtag(1L, "java"),
@@ -412,29 +413,28 @@ class ArticleServiceTest {
 
     private ArticleDto createArticleDto(String title, String content) {
         return ArticleDto.of(
-            1L,
-            createUserAccountDto(),
-            title,
-            content,
-            null,
-            LocalDateTime.now(),
-            "hann",
-            LocalDateTime.now(),
-            "hann"
-        );
+                1L,
+                createUserAccountDto(),
+                title,
+                content,
+                null,
+                LocalDateTime.now(),
+                "Uno",
+                LocalDateTime.now(),
+                "Uno");
     }
 
     private UserAccountDto createUserAccountDto() {
         return UserAccountDto.of(
-            "hanna",
-            "password",
-            "hanna@email.com",
-            "hann",
-            "this is memo",
-            LocalDateTime.now(),
-            "hann",
-            LocalDateTime.now(),
-            "hann"
+                "uno",
+                "password",
+                "uno@mail.com",
+                "Uno",
+                "This is memo",
+                LocalDateTime.now(),
+                "uno",
+                LocalDateTime.now(),
+                "uno"
         );
     }
 }
