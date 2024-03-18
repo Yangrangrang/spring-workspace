@@ -52,7 +52,7 @@ public class ArticleComment extends AuditingFields{
 
     public void addChildComment(ArticleComment child) {
         child.setParentCommentId(this.getId());
-        child.getChildComments().add(child);
+        this.getChildComments().add(child);
     }
 
     @Override
