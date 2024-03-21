@@ -3,6 +3,7 @@ package com.fastcampus.projectboard.controller;
 import com.fastcampus.projectboard.domain.constant.FormStatus;
 import com.fastcampus.projectboard.domain.constant.SearchType;
 import com.fastcampus.projectboard.dto.request.ArticleRequest;
+import com.fastcampus.projectboard.dto.response.ArticleCommentResponse;
 import com.fastcampus.projectboard.dto.response.ArticleResponse;
 import com.fastcampus.projectboard.dto.response.ArticleWithCommentResponse;
 import com.fastcampus.projectboard.dto.security.BoardPrincipal;
@@ -58,6 +59,11 @@ public class ArticleController {
         ArticleWithCommentResponse article = ArticleWithCommentResponse.from(articleService.getAritcleWithComments(articleId));
         map.addAttribute("article", article);
         map.addAttribute("articleComments", article.articleCommentResponses());
+        for (ArticleCommentResponse articleCommentResponse : article.articleCommentResponses()) {
+            for (ArticleCommentResponse childComment : articleCommentResponse.childComments()) {
+                System.out.println("childComment = " + childComment);
+            }
+        }
         map.addAttribute("totalCount", articleService.getArticleCount());
         map.addAttribute("searchTypeHashtag", SearchType.HASHTAG);
 
