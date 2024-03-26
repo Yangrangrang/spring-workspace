@@ -28,6 +28,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-rest'
     implementation 'org.springframework.data:spring-data-rest-hal-explorer'
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+    implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
     implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6'  // start.spring.id 에서 디펜던시 추가 할때 타임리프도 같이 해줘야 extras:thymeleaf 이 부분을 확인 할 수 있다.
     runtimeOnly 'com.h2database:h2'
