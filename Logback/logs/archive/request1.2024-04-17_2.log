@@ -1,0 +1,11 @@
+#logback.classic pattern: [REQUEST1] [%-5level] %d{yyyy-MM-dd HH:mm:ss} [%thread] [%logger{0}:%line] - %msg%n
+[REQUEST1] [INFO ] 2024-04-17 16:58:02 [main] [LogbackApplication:50] - Starting LogbackApplication using Java 17 with PID 22264 (C:\Myproject\spring-workspace\Logback\build\classes\java\main started by eM in C:\Myproject\spring-workspace\Logback)
+[REQUEST1] [INFO ] 2024-04-17 16:58:02 [main] [LogbackApplication:660] - The following 1 profile is active: "prod"
+[REQUEST1] [INFO ] 2024-04-17 16:58:03 [main] [TomcatWebServer:109] - Tomcat initialized with port 8080 (http)
+[REQUEST1] [INFO ] 2024-04-17 16:58:03 [main] [StandardService:173] - Starting service [Tomcat]
+[REQUEST1] [INFO ] 2024-04-17 16:58:03 [main] [StandardEngine:173] - Starting Servlet engine: [Apache Tomcat/10.1.19]
+[REQUEST1] [INFO ] 2024-04-17 16:58:03 [main] [[/]:173] - Initializing Spring embedded WebApplicationContext
+[REQUEST1] [INFO ] 2024-04-17 16:58:03 [main] [ServletWebServerApplicationContext:296] - Root WebApplicationContext: initialization completed in 785 ms
+[REQUEST1] [INFO ] 2024-04-17 16:58:03 [main] [TomcatWebServer:241] - Tomcat started on port 8080 (http) with context path ''
+[REQUEST1] [INFO ] 2024-04-17 16:58:03 [main] [LogbackApplication:56] - Started LogbackApplication in 1.553 seconds (process running for 2.009)
+#logback.classic pattern: [REQUEST1] [%-5level] %d{yyyy-MM-dd HH:mm:ss} [%thread] [%logger{0}:%line] - %msg%n
