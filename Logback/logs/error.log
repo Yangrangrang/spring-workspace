@@ -1,0 +1,2 @@
+#logback.classic pattern: [ERROR] [%-5level] %d{yyyy-MM-dd HH:mm:ss} [%thread] [%logger{0}:%line] - %msg%n
+[ERROR] [ERROR] 2024-04-22 16:46:21 [http-nio-8080-exec-1] [DemoController:17] - log --> ERROR
