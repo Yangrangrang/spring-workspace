@@ -76,10 +76,14 @@
 <!--        <appender-ref ref="REQUEST1" />-->
 <!--        <appender-ref ref="REQUEST2" />-->
 <!--        <appender-ref ref="MDC" />-->
-        <appender-ref ref="ERROR" />
+<!--        <appender-ref ref="ERROR" />-->
     </root>
 
     <logger name="SQL_LOG1" level="INFO" additivitty="false">
+        <appender-ref ref="QUERY" />
+    </logger>
+
+    <logger name="SQL_LOG2" level="INFO" additivitty="false">
         <appender-ref ref="QUERY" />
     </logger>
 
