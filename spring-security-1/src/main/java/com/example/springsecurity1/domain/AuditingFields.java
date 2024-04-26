@@ -24,8 +24,8 @@ public class AuditingFields {
     private String createBy;
 
     @LastModifiedDate
-    private LocalDateTime updateAt;
+    private LocalDateTime modifiedAt;
 
     @LastModifiedBy
-    private String updateBy;
+    private String modifiedBy;
 }
