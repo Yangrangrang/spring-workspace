@@ -18,10 +18,10 @@ import java.time.LocalDateTime;
 public class AuditingFields {
 
     @CreatedDate
-    private LocalDateTime createAt;
+    private LocalDateTime createdAt;
 
     @CreatedBy
-    private String createBy;
+    private String createdBy;
 
     @LastModifiedDate
     private LocalDateTime modifiedAt;

@@ -22,11 +22,7 @@ public record UserAccountDto(
         String modifiedBy
 ) {
 
-    public static UserAccountDto of(String userId, String userPassword, String nickName, String email, String phone) {
-        return new UserAccountDto(null, userId, userPassword, nickName, email, phone, "N", null, null, null, null, null);
-    }
-
-    public static UserAccountDto of(Long id, String userId, String userPassword, String nickName, String email, String phone, String isDelete, LocalDateTime lastLogin, LocalDateTime createdAt, String createdBy, LocalDateTime modifiedAt, String modifiedBy) {
+    public UserAccountDto of(Long id, String userId, String userPassword, String nickName, String email, String phone, String isDelete, LocalDateTime lastLogin, LocalDateTime createdAt, String createdBy, LocalDateTime modifiedAt, String modifiedBy) {
         return new UserAccountDto(id, userId, userPassword, nickName, email, phone, isDelete, lastLogin, createdAt, createdBy, modifiedAt, modifiedBy);
     }
 
@@ -41,8 +37,8 @@ public record UserAccountDto(
                 entity.getPhone(),
                 entity.getIsDelete(),
                 entity.getLastLogin(),
-                entity.getCreateAt(),
-                entity.getCreateBy(),
+                entity.getCreatedAt(),
+                entity.getCreatedBy(),
                 entity.getModifiedAt(),
                 entity.getModifiedBy()
         );
