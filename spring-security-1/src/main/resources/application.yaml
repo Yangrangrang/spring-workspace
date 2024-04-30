@@ -5,6 +5,7 @@ logging:
     com.example.springsecurity1: debug
     org.springframework.web.servlet: debug
     org.hibernate.type.descriptor.sql.BasicBinder: trace
+    org.springframework.security: debug
 
 spring:
   datasource:
