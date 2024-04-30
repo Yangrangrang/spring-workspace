@@ -8,7 +8,7 @@ import lombok.ToString;
 import java.util.Objects;
 
 @Getter
-@ToString
+@ToString(callSuper = true) // 부모클래스(AuditingFields)에 있는 필드들도 toString에 대상에 넣겠다.(userAccount를 log를 찍을때 생성자, 생성일시, 수정자, 수정일시도 보이게끔)
 @Table(indexes = {
         @Index(columnList = "email", unique = true),
         @Index(columnList = "createdAt"),
@@ -29,27 +29,33 @@ public class UserAccount extends AuditingFields {
 
     protected UserAccount() {}
 
-    public UserAccount(String userId, String userPassword, String email, String nickname, String memo) {
+    public UserAccount(String userId, String userPassword, String email, String nickname, String memo, String createBy) {
         this.userId = userId;
         this.userPassword = userPassword;
         this.email = email;
         this.nickname = nickname;
         this.memo = memo;
+        this.createdBy = createBy;
+        this.modifiedBy = createBy;
     }
 
     public static UserAccount of(String userId, String userPassword, String email, String nickname, String memo) {
-        return new UserAccount(userId, userPassword, email, nickname, memo);
+        return UserAccount.of(userId, userPassword, email, nickname, memo, null);
+    }
+
+    public static UserAccount of(String userId, String userPassword, String email, String nickname, String memo, String createdBy) {
+        return new UserAccount(userId, userPassword, email, nickname, memo, createdBy);
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof UserAccount that)) return false;
-        return userId != null && userId.equals(that.getUserId());
+        return this.getUserId() != null && this.getUserId().equals(that.getUserId());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(userId);
+        return Objects.hash(this.getUserId());
     }
 }

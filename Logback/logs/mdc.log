@@ -1,0 +1,17 @@
+#logback.classic pattern: [MDC] %X{jdb}
+[MDC] [MDC] [MDC] [MDC] [MDC] [MDC] [MDC] [MDC] [MDC] [MDC] [MDC] [MDC] [MDC] dev[MDC] dev[MDC] dev#logback.classic pattern: [MDC] %X{jdb} %n
+[MDC]  
+[MDC]  
+[MDC]  
+[MDC]  
+[MDC]  
+[MDC]  
+[MDC]  
+[MDC]  
+[MDC]  
+[MDC]  
+[MDC]  
+[MDC]  
+[MDC] dev 
+[MDC] dev 
+[MDC] dev 

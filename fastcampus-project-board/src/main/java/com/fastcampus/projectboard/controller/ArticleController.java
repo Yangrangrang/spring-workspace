@@ -2,8 +2,8 @@ package com.fastcampus.projectboard.controller;
 
 import com.fastcampus.projectboard.domain.constant.FormStatus;
 import com.fastcampus.projectboard.domain.constant.SearchType;
-import com.fastcampus.projectboard.dto.UserAccountDto;
 import com.fastcampus.projectboard.dto.request.ArticleRequest;
+import com.fastcampus.projectboard.dto.response.ArticleCommentResponse;
 import com.fastcampus.projectboard.dto.response.ArticleResponse;
 import com.fastcampus.projectboard.dto.response.ArticleWithCommentResponse;
 import com.fastcampus.projectboard.dto.security.BoardPrincipal;
@@ -49,6 +49,7 @@ public class ArticleController {
         map.addAttribute("articles", articles);
         map.addAttribute("paginationBarNumbers", barNumbers);
         map.addAttribute("searchTypes", SearchType.values());
+        map.addAttribute("searchTypeHashtag", SearchType.HASHTAG);
 
         return "articles/index";
     }
@@ -58,7 +59,14 @@ public class ArticleController {
         ArticleWithCommentResponse article = ArticleWithCommentResponse.from(articleService.getAritcleWithComments(articleId));
         map.addAttribute("article", article);
         map.addAttribute("articleComments", article.articleCommentResponses());
+        for (ArticleCommentResponse articleCommentResponse : article.articleCommentResponses()) {
+            for (ArticleCommentResponse childComment : articleCommentResponse.childComments()) {
+                System.out.println("childComment = " + childComment);
+            }
+        }
         map.addAttribute("totalCount", articleService.getArticleCount());
+        map.addAttribute("searchTypeHashtag", SearchType.HASHTAG);
+
         return "articles/detail";
     }
 
@@ -68,7 +76,7 @@ public class ArticleController {
             @PageableDefault(size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable,
             ModelMap map
     ) {
-        Page<ArticleResponse> articles = articleService.searchArticleViaHasgtag(searchValue, pageable).map(ArticleResponse::from);
+        Page<ArticleResponse> articles = articleService.searchArticlesViaHashtag(searchValue, pageable).map(ArticleResponse::from);
         List<Integer> barNumbers = paginationService.getPaginationBarNumbers(pageable.getPageNumber(), articles.getTotalPages());
         List<String> hashtags = articleService.getHashtags();
 
@@ -107,7 +115,7 @@ public class ArticleController {
         return "articles/form";
     }
 
-    @PostMapping ("/{articleId}/form")
+    @PostMapping("/{articleId}/form")
     public String updateArticle(
             @PathVariable("articleId") Long articleId,
             @AuthenticationPrincipal BoardPrincipal boardPrincipal,
@@ -118,7 +126,7 @@ public class ArticleController {
         return "redirect:/articles/" + articleId;
     }
 
-    @PostMapping ("/{articleId}/delete")
+    @PostMapping("/{articleId}/delete")
     public String deleteArticle(
             @PathVariable("articleId") Long articleId,
             @AuthenticationPrincipal BoardPrincipal boardPrincipal
