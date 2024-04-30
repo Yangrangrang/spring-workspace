@@ -18,6 +18,7 @@ class UserAccountServiceTest {
     void savedUserTest() {
         UserAccount user = UserAccount.of(
                 "test",
+                "username",
                 "123",
                 "tt",
                 "test@mail.com",
@@ -25,7 +26,7 @@ class UserAccountServiceTest {
                 "N",
                 LocalDateTime.now()
         );
-        UserAccountDto userDto = service.savedUser(user);
+        UserAccountDto userDto = service.savedUser(UserAccountDto.from(user));
         System.out.println("userDto.id() = " + userDto.id());
     }
 
@@ -33,6 +34,7 @@ class UserAccountServiceTest {
     void getUserTest() {
         UserAccount user = UserAccount.of(
                 "test",
+                "username",
                 "123",
                 "tt",
                 "test@mail.com",
@@ -40,7 +42,7 @@ class UserAccountServiceTest {
                 "N",
                 LocalDateTime.now()
         );
-        UserAccountDto userDto = service.savedUser(user);
+        UserAccountDto userDto = service.savedUser(UserAccountDto.from(user));
 
         UserAccountDto getUserDto = service.getUser(userDto.id());
         System.out.println("getUserDto.userId() = " + getUserDto.userId());

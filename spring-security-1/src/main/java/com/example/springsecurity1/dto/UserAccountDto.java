@@ -10,6 +10,7 @@ import java.time.LocalDateTime;
 public record UserAccountDto(
         Long id,
         String userId,
+        String userName,
         String userPassword,
         String nickName,
         String email,
@@ -22,14 +23,15 @@ public record UserAccountDto(
         String modifiedBy
 ) {
 
-    public UserAccountDto of(Long id, String userId, String userPassword, String nickName, String email, String phone, String isDelete, LocalDateTime lastLogin, LocalDateTime createdAt, String createdBy, LocalDateTime modifiedAt, String modifiedBy) {
-        return new UserAccountDto(id, userId, userPassword, nickName, email, phone, isDelete, lastLogin, createdAt, createdBy, modifiedAt, modifiedBy);
+    public UserAccountDto of(Long id, String userName, String userId, String userPassword, String nickName, String email, String phone, String isDelete, LocalDateTime lastLogin, LocalDateTime createdAt, String createdBy, LocalDateTime modifiedAt, String modifiedBy) {
+        return new UserAccountDto(id, userId, userName, userPassword, nickName, email, phone, isDelete, lastLogin, createdAt, createdBy, modifiedAt, modifiedBy);
     }
 
     // DB에서 가져온 entity를 dto로 전환
     public static UserAccountDto from(UserAccount entity) {
         return new UserAccountDto(
                 entity.getId(),
+                entity.getUserName(),
                 entity.getUserId(),
                 entity.getUserPassword(),
                 entity.getNickName(),
@@ -48,6 +50,7 @@ public record UserAccountDto(
     public UserAccount toEntity() {
         return UserAccount.of(
                 userId,
+                userName,
                 userPassword,
                 nickName,
                 email,

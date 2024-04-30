@@ -17,8 +17,8 @@ public class UserAccountService implements UserDetailsService {
 
     private final UserAccountRepository repository;
 
-    public UserAccountDto savedUser(UserAccount entity) {
-        UserAccount user = repository.save(entity);
+    public UserAccountDto savedUser(UserAccountDto dto) {
+        UserAccount user = repository.save(dto.toEntity());
         return UserAccountDto.from(user);
     }
 

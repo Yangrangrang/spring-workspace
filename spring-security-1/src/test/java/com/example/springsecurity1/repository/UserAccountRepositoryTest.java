@@ -25,6 +25,7 @@ public class UserAccountRepositoryTest {
         System.out.println("cnt = " + cnt);
         UserAccount user = userAccountRepository.save(UserAccount.of(
                 "test",
+                "username",
                 "123",
                 "tt",
                 "test@mail.com",

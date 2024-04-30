@@ -15,6 +15,7 @@ public class UserAccount extends AuditingFields{
     private Long id;
 
     private String userId;
+    private String userName;
     private String userPassword;
     private String nickName;
     private String email;
@@ -23,8 +24,9 @@ public class UserAccount extends AuditingFields{
     private LocalDateTime lastLogin;
 
     public UserAccount() {}
-    public UserAccount(String userId, String userPassword, String nickName, String email, String phone, String isDelete, LocalDateTime lastLogin) {
+    public UserAccount(String userId, String userName, String userPassword, String nickName, String email, String phone, String isDelete, LocalDateTime lastLogin) {
         this.userId = userId;
+        this.userName = userName;
         this.userPassword = userPassword;
         this.nickName = nickName;
         this.email = email;
@@ -33,7 +35,7 @@ public class UserAccount extends AuditingFields{
         this.lastLogin = lastLogin;
     }
 
-    public static UserAccount of(String userId, String userPassword, String nickName, String email, String phone, String isDelete, LocalDateTime lastLogin) {
-        return new UserAccount(userId, userPassword, nickName, email, phone, isDelete, lastLogin);
+    public static UserAccount of(String userId, String userName, String userPassword, String nickName, String email, String phone, String isDelete, LocalDateTime lastLogin) {
+        return new UserAccount(userId, userName, userPassword, nickName, email, phone, isDelete, lastLogin);
     }
 }
