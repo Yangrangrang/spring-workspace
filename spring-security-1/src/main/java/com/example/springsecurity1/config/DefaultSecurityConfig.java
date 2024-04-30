@@ -17,6 +17,7 @@ import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 
 import java.util.Optional;
 
@@ -38,11 +39,17 @@ public class DefaultSecurityConfig {
 //    }
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+
         http
+//                .csrf(csrf ->csrf.disable())    // csrd 비활성화 (개발환경에서는 사용 가능 운영X)
                 .authorizeHttpRequests((authorize) -> authorize
+
 //                        .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
-                        .requestMatchers(HttpMethod.GET,"/").permitAll()
+                        .requestMatchers("/","/user/form").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/user/form").permitAll()
                         .anyRequest().authenticated())
+                .csrf(csrf -> csrf.ignoringRequestMatchers("/user/form")) // "/user/form"에 대한 CSRF 보호 비활성화
+                // 해당 경로에 대한 POST 요청은 CSRF 토큰 검증을 거치지 않고 허용 , 운영 환경에서 csrf보호를 해제하는 것 보다 다른 방법 고려, ex) CAPTCHA, 이메일 인증
                 .formLogin(Customizer.withDefaults())
                 .logout((logout) -> logout
                         .logoutSuccessUrl("/login")

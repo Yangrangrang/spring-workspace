@@ -18,19 +18,13 @@ public class UserController {
     private final UserAccountService userAccountService;
 
     @GetMapping("/form")
-    public String join() {
-        return "users/form";
+    public String user(UserAccountDto dto) {
+        return "/users/form";
     }
 
     @PostMapping("/form")
     public String joinForm(UserAccountDto dto) {
 
-        System.out.println("dto. = " + dto.userId());
-        System.out.println("dto. = " + dto.userPassword());
-        System.out.println("dto. = " + dto.email());
-        System.out.println("dto. = " + dto.nickName());
-        System.out.println("dto. = " + dto.phone());
-
-        return "/user/form";
+        return "/users/form";
     }
 }
