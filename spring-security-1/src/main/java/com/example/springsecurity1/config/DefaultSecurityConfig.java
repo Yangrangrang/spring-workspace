@@ -1,29 +1,31 @@
 package com.example.springsecurity1.config;
 
-import com.example.springsecurity1.domain.UserAccount;
-import com.example.springsecurity1.dto.UserAccountDto;
-import com.example.springsecurity1.repository.UserAccountRepository;
+import com.example.springsecurity1.service.UserAccountService;
+import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 
-import java.util.Optional;
 
 @EnableWebSecurity
 @Configuration
 public class DefaultSecurityConfig {
+
+    private final UserAccountService userAccountService;
+
+    public DefaultSecurityConfig(UserAccountService userAccountService) {
+        this.userAccountService = userAccountService;
+    }
 
     /**
      * spring security 공식홈페이지에서 확인.
@@ -44,8 +46,12 @@ public class DefaultSecurityConfig {
 //                .csrf(csrf ->csrf.disable())    // csrd 비활성화 (개발환경에서는 사용 가능 운영X)
                 .authorizeHttpRequests((authorize) -> authorize
 
-//                        .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
-                        .requestMatchers("/","/user/form").permitAll()
+                        .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
+                        .requestMatchers(
+                                HttpMethod.GET,
+                                "/",
+                                "/user/form"
+                        ).permitAll()
                         .requestMatchers(HttpMethod.POST, "/user/form").permitAll()
                         .anyRequest().authenticated())
                 .csrf(csrf -> csrf.ignoringRequestMatchers("/user/form")) // "/user/form"에 대한 CSRF 보호 비활성화
@@ -68,11 +74,24 @@ public class DefaultSecurityConfig {
     }
 
 //    @Bean
-//    public UserDetailsService userDetailsService(UserAccountRepository userAccountRepository) {
+//    public UserDetailsService userDetailsService(UserAccountService userAccountService) {
 //        UserDetails userDetails = User.withDefaultPasswordEncoder()
 //                .username("user")
 //                .password("123")
 //                .roles("USER")
 //                .build();
 //    }
+
+    @Bean
+    public UserDetailsService userDetailsService() {
+        return username -> userAccountService
+                .searchUser(username)
+                .map(user -> org.springframework.security.core.userdetails.User.builder()
+                        .username(user.toEntity().getUserId())
+                        .password(user.toEntity().getUserPassword())
+                        .roles("USER")
+                        .build()
+                )
+                .orElseThrow(()-> new UsernameNotFoundException("유저를 찾을 수 없습니다."));
+    }
 }

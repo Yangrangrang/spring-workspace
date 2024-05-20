@@ -3,22 +3,29 @@ package com.example.springsecurity1.service;
 import com.example.springsecurity1.domain.UserAccount;
 import com.example.springsecurity1.dto.UserAccountDto;
 import com.example.springsecurity1.repository.UserAccountRepository;
-import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
 @Service
-@RequiredArgsConstructor
-public class UserAccountService implements UserDetailsService {
+public class UserAccountService {
 
     private final UserAccountRepository repository;
+    private final PasswordEncoder passwordEncoder;
+
+    @Autowired
+    public UserAccountService(@Lazy PasswordEncoder passwordEncoder, UserAccountRepository repository) {
+        this.passwordEncoder = passwordEncoder;
+        this.repository = repository;
+    }
 
     public UserAccountDto savedUser(UserAccountDto dto) {
-        UserAccount user = repository.save(dto.toEntity());
+        UserAccount user = dto.toEntity(passwordEncoder);
+        repository.save(user);
         return UserAccountDto.from(user);
     }
 
@@ -27,19 +34,8 @@ public class UserAccountService implements UserDetailsService {
         return UserAccountDto.from(user);
     }
 
-    @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        UserAccount user = repository.findByUserId(username);
-
-        if (user == null) {
-            throw new UsernameNotFoundException("사용자를 찾을 수 없습니다: " + username);
-        }
-
-        // 사용자 정보를 UserDatails 객체로 변환
-        return org.springframework.security.core.userdetails.User.builder()
-                .username(user.getUserId())
-                .password(user.getUserPassword())
-                .roles("USER")
-                .build();
+    @Transactional(readOnly = true)
+    public Optional<UserAccountDto> searchUser(String username) {
+        return repository.findByUserId(username);
     }
 }

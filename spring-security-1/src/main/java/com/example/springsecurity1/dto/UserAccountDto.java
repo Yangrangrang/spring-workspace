@@ -1,6 +1,7 @@
 package com.example.springsecurity1.dto;
 
 import com.example.springsecurity1.domain.UserAccount;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDateTime;
 
@@ -52,6 +53,20 @@ public record UserAccountDto(
                 userId,
                 userName,
                 userPassword,
+                nickName,
+                email,
+                phone,
+                isDelete,
+                lastLogin
+        );
+    }
+
+    public UserAccount toEntity(PasswordEncoder passwordEncoder) {
+        String encryptedPassword = passwordEncoder.encode(userPassword);
+        return UserAccount.of(
+                userId,
+                userName,
+                encryptedPassword,
                 nickName,
                 email,
                 phone,

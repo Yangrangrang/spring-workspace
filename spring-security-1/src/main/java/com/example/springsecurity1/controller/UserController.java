@@ -24,7 +24,14 @@ public class UserController {
 
     @PostMapping("/form")
     public String joinForm(UserAccountDto dto) {
+        log.info("joinForm:::::::::::::::::");
 
-        return "/users/form";
+        System.out.println("dto.userId() = " + dto.userId());
+        System.out.println("dto.phone() = " + dto.phone());
+        System.out.println("dto.userPassword() = " + dto.userPassword());
+
+        userAccountService.savedUser(dto);
+
+        return "redirect:/";
     }
 }
