@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
+import java.sql.Timestamp;
 
 @Entity
 @Table(name = "users")
@@ -19,5 +19,5 @@ public class User {
     private String password;
     private String email;
     private String role;    // ROLE_ADMIN, ROLE_USER
-    private LocalDateTime createDate;
+    private Timestamp createDate;
 }

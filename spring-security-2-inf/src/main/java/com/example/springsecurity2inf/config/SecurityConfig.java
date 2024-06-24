@@ -23,14 +23,14 @@ public class SecurityConfig {
         http.csrf(csrf -> csrf.disable());
         http.authorizeHttpRequests((authorize) -> authorize
                         .requestMatchers("/", "join", "joinProc", "joinForm", "loginForm").permitAll()
-//                        .requestMatchers("/user/**").permitAll()
+                        .requestMatchers("/user/**").authenticated()    // 인증만 되면 들어갈 수 있는 주소!
                         .requestMatchers("/manager/**").hasAnyAuthority("ROLE_ADMIN", "ROLE_MANAGER")
                         .requestMatchers("/admin/**").hasAuthority("ROLE_ADMIN")
                         .anyRequest().authenticated()
                 )
                 .formLogin((login) -> login
                         .loginPage("/loginForm")
-                        .loginProcessingUrl("/loginProc")
+                        .loginProcessingUrl("/login")   // login주소가 호출되면 시큐리티가 낚아채서 대신 로그인을 진행해줌.
                         .defaultSuccessUrl("/")
                 );
 
