@@ -20,4 +20,7 @@ public class User {
     private String email;
     private String role;    // ROLE_ADMIN, ROLE_USER
     private Timestamp createDate;
+
+    private String provider;
+    private String providerId;
 }
