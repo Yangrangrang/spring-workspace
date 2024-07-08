@@ -1,13 +1,16 @@
 package com.example.springsecurityjwt.config;
 
+import com.example.springsecurityjwt.config.jwt.JwtAuthenticationFilter;
 import com.example.springsecurityjwt.filter.MyFilter1;
 import com.example.springsecurityjwt.filter.MyFilter3;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.security.web.context.SecurityContextPersistenceFilter;
@@ -41,6 +44,7 @@ public class SecurityConfig {
         http.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .formLogin(login -> login.disable())
                 .httpBasic(basic -> basic.disable())
+                .addFilter(new JwtAuthenticationFilter(http.getSharedObject(AuthenticationManager.class)))   // AuthenticationManager 를 던져줘야함.
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/api/v1/user/**").hasAnyAuthority("ROLE_USER", "ROLE_MANAGER", "ROLE_ADMIN")
                         .requestMatchers("/api/v1/manager/**").hasAnyAuthority("ROLE_MANAGER", "ROLE_ADMIN")
