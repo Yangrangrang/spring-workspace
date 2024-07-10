@@ -1,5 +1,7 @@
 package com.example.springsecurityjwt.config.jwt;
 
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.algorithms.Algorithm;
 import com.example.springsecurityjwt.config.auth.PrincipalDetails;
 import com.example.springsecurityjwt.model.User;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -16,6 +18,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.util.Date;
 
 /**
  * 스프링 시큐리티에서 UsernamePasswordAuthenticationFilter 가 있음.
@@ -90,6 +93,33 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
         System.out.println("successfulAuthentication 실행 됨 : 인증이 완료 되었다는 뜻.");
-        super.successfulAuthentication(request, response, chain, authResult);
+
+        PrincipalDetails principalDetails = (PrincipalDetails) authResult.getPrincipal();
+
+        // RSA 방식이 아닌 Hash암호 방식
+        String jwtToken = JWT.create()
+                .withSubject("cos-token")
+                .withExpiresAt(new Date(System.currentTimeMillis() + (60000*10)))    // 만료 시간 60000*10 : 10분
+                .withClaim("id", principalDetails.getUser().getId())
+                .withClaim("username", principalDetails.getUser().getUsername())
+                .sign(Algorithm.HMAC512("cos"));    // 내 서버만 아는 고유 시크릿
+
+        response.addHeader("Authorization", "Bearer " + jwtToken);
+
+        /**
+         * 유저 네임, 패스워드 로그인 정상
+         *
+         * 서버 쪽 세션ID 생성
+         * 클라이언트 쿠키 세션ID를 응답
+         *
+         * 요청 할 때마다 쿠키값 세션ID를 항상 들고 서버쪽으로 요청하기 때문에 서버는 세션ID가 유효한지 판단해서 유효하면 인증이 필요한 페이지로 접근하게 하면 됨.
+         *
+         * 유저 네임, 패스워드 로그인 정상
+         * JWT 토큰 생성
+         * 클라이언트 쪽으로 JWT 토큰을 응답
+         *
+         * 요청 할 때마다 JWT토큰을 가지고 요청
+         * 서버는 JWT토큰이 유효한지를 판단 (필터를 만들어야함)
+         */
     }
 }
