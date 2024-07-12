@@ -1,8 +1,10 @@
 package com.example.springsecurityjwt.config;
 
 import com.example.springsecurityjwt.config.jwt.JwtAuthenticationFilter;
+import com.example.springsecurityjwt.config.jwt.JwtAuthorizationFilter;
 import com.example.springsecurityjwt.filter.MyFilter1;
 import com.example.springsecurityjwt.filter.MyFilter3;
+import com.example.springsecurityjwt.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -23,6 +25,8 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
+
+    private final UserRepository userRepository;
 
     // authenticaionManager 가 null 에러 이슈
     @Bean
@@ -45,13 +49,14 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http, AuthenticationManager authenticationManager) throws Exception {
 //        http.addFilterBefore(new MyFilter1(), BasicAuthenticationFilter.class);   // 필터 걸때 이렇게 할 필요는 없다.
-        http.addFilterBefore(new MyFilter3(), SecurityContextPersistenceFilter.class); // 시큐리티 필터가 우선.
+//        http.addFilterBefore(new MyFilter3(), SecurityContextPersistenceFilter.class); // 시큐리티 필터가 우선.
         http.csrf(csrf -> csrf.disable());
         http.cors(cors -> cors.configurationSource(corsConfigurationSource()));
         http.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .formLogin(login -> login.disable())
                 .httpBasic(basic -> basic.disable())
                 .addFilter(new JwtAuthenticationFilter(authenticationManager))   // AuthenticationManager 를 던져줘야함.
+                .addFilter(new JwtAuthorizationFilter(authenticationManager, userRepository))
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/api/v1/user/**").hasAnyAuthority("ROLE_USER", "ROLE_MANAGER", "ROLE_ADMIN")
                         .requestMatchers("/api/v1/manager/**").hasAnyAuthority("ROLE_MANAGER", "ROLE_ADMIN")
