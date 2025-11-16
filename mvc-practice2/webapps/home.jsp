@@ -9,5 +9,9 @@
 </head>
 <body>
 Home 페이지
+<% data++; %>
+<%! int data = 10; %>
+<% data++; %>
+<%= data++ %>
 </body>
 </html>
